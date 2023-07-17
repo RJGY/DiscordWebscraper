@@ -3,8 +3,8 @@ import json
 from dotenv import load_dotenv
 
 API_ENDPOINT = 'https://discord.com/api/v10'
-CLIENT_ID = '332269999912132097'
-CLIENT_SECRET = '937it3ow87i4ery69876wqire'
+CLIENT_ID = ''
+CLIENT_SECRET = ''
 
 def retrieve_messages(channel_id, auth):
     headers = {
