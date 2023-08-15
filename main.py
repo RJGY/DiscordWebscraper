@@ -1,10 +1,13 @@
 import requests
 import json
 from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 API_ENDPOINT = 'https://discord.com/api/v10'
-CLIENT_ID = ''
-CLIENT_SECRET = ''
+CHANNEL_IDS = json.loads(os.environ.get('CHANNEL_IDS'))
+AUTH_TOKEN = os.environ.get('AUTH_TOKEN')
 
 def retrieve_messages(channel_id, auth):
     headers = {
@@ -14,37 +17,17 @@ def retrieve_messages(channel_id, auth):
     req = requests.get(f'{API_ENDPOINT}/channels/{channel_id}/messages', headers=headers)
     
     json_data = json.loads(req.text)
+    json_data = json_data[::-1]
     for message in json_data:
         print(message)
-        
-def exchange_code(code):
-    data = {
-        'client_id': CLIENT_ID,
-        'client_secret': CLIENT_SECRET,
-        'grant_type': 'authorization_code',
-        'code': code
-    }
-    headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
-    r = requests.post(f'{API_ENDPOINT}/oauth2/token', data=data, headers=headers)
-    r.raise_for_status()
-    return r.json()
+    print(type(json_data[0]))
+    return json_data
 
-def refresh_token(refresh_token):
-    data = {
-        'client_id': CLIENT_ID,
-        'client_secret': CLIENT_SECRET,
-        'grant_type': 'refresh_token',
-        'refresh_token': refresh_token
-    }
-    headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
-    r = requests.post(f'{API_ENDPOINT}/oauth2/token', data=data, headers=headers)
-    r.raise_for_status()
-    return r.json()
-    
+def save_to_file(data):
+    with open('messages.txt', 'w') as f:
+        for message in data:
+            f.write(message.get('timestamp') + ' ' + message.get('author').get('username') + ' ' + message.get('content') + '\n')
+            
         
-retrieve_messages('1130422367802372118', 'MTEyMjQ2NjQyMzk3ODA2NjAxMg.GeeslP.pCmneZby_3aE1b9smVUDqR8T97i5Bwfz87M5Cg')
-# this works
+data = retrieve_messages('1140562562065387572', AUTH_TOKEN)
+save_to_file(data)
