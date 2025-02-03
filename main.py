@@ -82,7 +82,7 @@ def filter_by_author(messages, user_ids) -> dict[str, list[dict]]:
 
 async def random_delay() -> float:
     """Creates a random delay between 1 second and 3 hours"""
-    delay = random.uniform(1, 3*60*60)
+    delay = random.uniform(1, 3*60*60) + 3600 * 6 + 60
     print(f"Waiting for {delay:.2f} seconds before next execution")
     await asyncio.sleep(delay)
     
