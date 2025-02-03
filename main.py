@@ -13,6 +13,7 @@ load_dotenv()
 
 API_ENDPOINT = 'https://discord.com/api/v9'
 VIEW_CHANNEL_ID = int(os.environ.get('VIEW_CHANNEL_ID'))
+VIEW_SERVER_ID = int(os.environ.get('VIEW_SERVER_ID'))
 VIEW_USER_IDS = list(map(int, os.environ.get('VIEW_USER_IDS').split(',')))
 SEND_CHANNEL_IDS = list(map(int, os.environ.get('SEND_CHANNEL_IDS').split(',')))
 AUTH_TOKEN = os.environ.get('AUTH_TOKEN')
@@ -57,6 +58,8 @@ def filter_messages(messages) -> list[dict]:
         dict_messages['author_id'] = author_id
         dict_messages['content'] = content
         dict_messages['avatar'] = message.get('author').get('avatar')
+        dict_messages['channel_id'] = message.get('channel_id')
+        dict_messages['attachments'] = message.get('attachments')
         list_of_dict_messages.append(dict_messages)
     return list_of_dict_messages
 
@@ -93,6 +96,7 @@ async def periodic_task():
     """Background task that runs every 1 minute"""
     try:
         channel_id = VIEW_CHANNEL_ID
+        server_id = VIEW_SERVER_ID
         channels = await get_channels(SEND_CHANNEL_IDS)
         old_last_message = await get_last_user_message(channels[0], bot.user.id)
         if old_last_message and old_last_message.content.startswith('Last message ID: '):
@@ -117,7 +121,8 @@ async def periodic_task():
             if user_messages:
                 user_name = user_messages[0]['author']
                 avatar = user_messages[0]['avatar']
-                user_messages = [msg['content'] for msg in user_messages]
+                channel_id = user_messages[0]['channel_id']
+                user_messages = [f"https://discord.com/channels/{server_id}/{channel_id}/{msg['id']}" + " " + msg['content'] + (" IMAGE" if msg.get('attachments') else "") for msg in user_messages]
                 user_messages = user_messages[::-1]
                 user_messages = '\n'.join(user_messages)
                 if len(user_messages) > 1000:
@@ -161,18 +166,6 @@ async def before_periodic_task():
 async def on_ready():
     print(f'{bot.user} has connected to Discord!')
     periodic_task.start()  # Start the periodic task when bot is ready
-
-@bot.command(name='send')
-async def send_message(ctx, *, message):
-    """Send a message to a specific channel
-    Usage: !send Your message here
-    """
-    channel = bot.get_channel(int(SEND_CHANNEL_IDS))  
-    if channel:
-        await channel.send(message)
-        await ctx.send(f'Message sent to channel: {channel.name}')
-    else:
-        await ctx.send('Could not find the specified channel')
 
 async def retrieve_messages_until_id(channel_id, target_message_id, before_id=None, collected_messages=None, iteration=0) -> list[dict]:
     """
