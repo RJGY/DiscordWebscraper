@@ -120,6 +120,18 @@ async def periodic_task():
                 user_messages = [msg['content'] for msg in user_messages]
                 user_messages = user_messages[::-1]
                 user_messages = '\n'.join(user_messages)
+                if len(user_messages) > 1000:
+                    while len(user_messages) > 1000:
+                        small_message = user_messages[:1000]
+                        user_messages = user_messages[1000:]
+                        embed = discord.Embed(
+                            title=f"{user_name} Messages",
+                            colour=discord.Colour.blue(),
+                            timestamp=datetime.now()
+                        )
+                        embed.add_field(name=f'', value=f'{small_message}')
+                        embed.set_author(name=f'{user_name}', icon_url=f'https://cdn.discordapp.com/avatars/{user_id}/{avatar}.png')
+                        await send_channel.send(embed=embed)
                 embed = discord.Embed(
                     title=f"{user_name} Messages",
                     colour=discord.Colour.blue(),
@@ -253,6 +265,18 @@ async def fetch_messages(ctx: commands.Context):
                 user_messages = [msg['content'] for msg in user_messages]
                 user_messages = user_messages[::-1]
                 user_messages = '\n'.join(user_messages)
+                if len(user_messages) > 1000:
+                    while len(user_messages) > 1000:
+                        small_message = user_messages[:1000]
+                        user_messages = user_messages[1000:]
+                        embed = discord.Embed(
+                            title=f"{user_name} Messages",
+                            colour=discord.Colour.blue(),
+                            timestamp=datetime.now()
+                        )
+                        embed.add_field(name=f'', value=f'{small_message}')
+                        embed.set_author(name=f'{user_name}', icon_url=f'https://cdn.discordapp.com/avatars/{user_id}/{avatar}.png')
+                        await send_channel.send(embed=embed)
                 embed = discord.Embed(
                     title=f"{user_name} Messages",
                     colour=discord.Colour.blue(),

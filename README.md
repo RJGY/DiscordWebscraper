@@ -11,5 +11,5 @@ to do list for extra functionality that i dont really care about atm:
 - [ ] add links to each message in the output so i can just click them and go to the message
 - [ ] be able to add users on the fly rather than coding them into env files
 - [ ] be able to add channels on the fly rather than coding them into env files
-
+- [ ] replace userid with username in the no messages found message
 
