@@ -229,7 +229,7 @@ async def get_last_user_message(channel, user_id) -> discord.Message:
 async def fetch_messages(ctx: commands.Context):
     """
     Command to fetch messages until a specific message ID
-    Usage: !fetch <message_id>
+    Usage: !fetch
     """
     channel_id = VIEW_CHANNEL_ID
     channels = await get_channels(SEND_CHANNEL_IDS)
@@ -261,9 +261,10 @@ async def fetch_messages(ctx: commands.Context):
                 embed.add_field(name=f'', value=f'{user_messages}')
                 embed.set_author(name=f'{user_name}', icon_url=f'https://cdn.discordapp.com/avatars/{user_id}/{avatar}.png')
                 await send_channel.send(embed=embed)
-                await send_channel.send(f'{messages[0]["id"]}')
+                await send_channel.send(f'Last message ID: {messages[0]["id"]}')
             else:
                 await send_channel.send(f'No messages found for user {user_id}')
+                await send_channel.send(f'Last message ID: {messages[0]["id"]}')
     except Exception as e:
         await ctx.send(f'Error fetching messages: {str(e)}')
 
