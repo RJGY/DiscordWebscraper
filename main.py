@@ -237,6 +237,7 @@ async def fetch_messages(ctx: commands.Context):
     Usage: !fetch
     """
     channel_id = VIEW_CHANNEL_ID
+    server_id = VIEW_SERVER_ID
     channels = await get_channels(SEND_CHANNEL_IDS)
     old_last_message = await get_last_user_message(channels[0], bot.user.id)
     if old_last_message:
@@ -255,7 +256,8 @@ async def fetch_messages(ctx: commands.Context):
             if user_messages:
                 user_name = user_messages[0]['author']
                 avatar = user_messages[0]['avatar']
-                user_messages = [msg['content'] for msg in user_messages]
+                channel_id = user_messages[0]['channel_id']
+                user_messages = [f"https://discord.com/channels/{server_id}/{channel_id}/{msg['id']}" + " " + msg['content'] + (" IMAGE" if msg.get('attachments') else "") for msg in user_messages]
                 user_messages = user_messages[::-1]
                 user_messages = '\n'.join(user_messages)
                 if len(user_messages) > 1000:
