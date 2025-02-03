@@ -1,8 +1,15 @@
 # DiscordWebscraper
 DiscordWebscraper
 
+this bot basically can fetch messages from a discord channel and send them to another discord channel so theyre easier to keep track of. discord doesnt really like this but i dont care. it can track multiple users in a single channel.
 
-Ok so this is kinda doable but I have managed to get a working version atm so going to stop here with this version. 
 
-Currently the issue is that you cannot generate a user auth token through the api. This has to be done via logging in and I have no intention of doing something as dumb as trying to login to Discord via an API request like that to get my account banned. Seems really dumb. What I can do though, is keep a webbrowser open permanantly and basically as long as that browser is alive, Discord will constantly refresh that user auth token, meaning that I can just feed one auth token in and forever keep the browser alive and be able to just scrape data for as long as I want.
+to do list for extra functionality that i dont really care about atm:
+- [ ] fetch command should actually work (it doesnt rn lmao)
+- [ ] be able to fetch messages from multiple channels at once
+- [ ] more error handling for longer messages (longer than 2000 characters breaks the bot currently)
+- [ ] add links to each message in the output so i can just click them and go to the message
+- [ ] be able to add users on the fly rather than coding them into env files
+- [ ] be able to add channels on the fly rather than coding them into env files
+
 
