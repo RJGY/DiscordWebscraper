@@ -32,7 +32,7 @@ if len(VIEW_USER_IDS) != len(SEND_CHANNEL_IDS):
 user_channel_map = dict(zip(map(str, VIEW_USER_IDS), SEND_CHANNEL_IDS))
 
 
-async def retrieve_messages(channel_id, last_message_id=None):
+async def retrieve_messages(channel_id, last_message_id=None) -> list[dict]:
     headers = {
         'authorization' : AUTH_TOKEN
     }
@@ -46,7 +46,7 @@ async def retrieve_messages(channel_id, last_message_id=None):
     json_data = json.loads(req.text)
     return json_data
             
-def filter_messages(messages):
+def filter_messages(messages) -> list[dict]:
     list_of_dict_messages = []
     for message in messages:
         dict_messages = {}
@@ -60,7 +60,7 @@ def filter_messages(messages):
         list_of_dict_messages.append(dict_messages)
     return list_of_dict_messages
 
-def filter_by_author(messages, user_ids):
+def filter_by_author(messages, user_ids) -> dict[str, list[dict]]:
     """
     Filter messages and group them by author
     
@@ -80,7 +80,7 @@ def filter_by_author(messages, user_ids):
     
     return filtered_messages
 
-async def random_delay():
+async def random_delay() -> float:
     """Creates a random delay between 1 second and 3 hours"""
     delay = random.uniform(1, 3*60*60)
     print(f"Waiting for {delay:.2f} seconds before next execution")
@@ -129,7 +129,6 @@ async def periodic_task():
                 embed.set_author(name=f'{user_name}', icon_url=f'https://cdn.discordapp.com/avatars/{user_id}/{avatar}.png')
                 await send_channel.send(embed=embed)
                 await send_channel.send(f'Last message ID: {messages[0]["id"]}')
-                # print(f'{messages}')
             else:
                 await send_channel.send(f'No messages found for user {user_id}')
                 await send_channel.send(f'Last message ID: {messages[0]["id"]}')
@@ -163,7 +162,7 @@ async def send_message(ctx, *, message):
     else:
         await ctx.send('Could not find the specified channel')
 
-async def retrieve_messages_until_id(channel_id, target_message_id, before_id=None, collected_messages=None, iteration=0):
+async def retrieve_messages_until_id(channel_id, target_message_id, before_id=None, collected_messages=None, iteration=0) -> list[dict]:
     """
     Recursively retrieve messages until reaching a specific message ID or max iterations
     
@@ -262,7 +261,6 @@ async def fetch_messages(ctx: commands.Context):
                 embed.add_field(name=f'', value=f'{user_messages}')
                 embed.set_author(name=f'{user_name}', icon_url=f'https://cdn.discordapp.com/avatars/{user_id}/{avatar}.png')
                 await send_channel.send(embed=embed)
-                print(f'{messages}')
                 await send_channel.send(f'{messages[0]["id"]}')
             else:
                 await send_channel.send(f'No messages found for user {user_id}')
@@ -295,10 +293,6 @@ async def get_channels(channel_ids) -> list[discord.TextChannel]:
 
 def main():
     bot.run(BOT_TOKEN)
-    # data = await retrieve_messages('1022522650519687219')
-    # print(filter_messages(data))
-    # new_messages = trim_data(filter_messages(data))
-    # print(new_messages)
 
 if __name__ == "__main__":
     main()
