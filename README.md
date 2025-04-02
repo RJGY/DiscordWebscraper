@@ -55,3 +55,4 @@ This bot uses user authorization tokens which is against Discord's Terms of Serv
 - [ ] Improved attachment handling
 - [ ] Better code structure to reduce duplication
 - [ ] User-friendly error messages
+- [ ] Make delay configurable
